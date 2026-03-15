@@ -5,7 +5,6 @@ from math import log
 import math
 
 import matplotlib.pyplot as plt
-from funcs import *
 from mnk import *
 
 
