@@ -8,6 +8,18 @@ import matplotlib.pyplot as plt
 from mnk import *
 
 
+color_combo_s = [
+    ('#000000', '#E69F00', '#56B4E9'),  # Черный, оранжевый, голубой
+    ('#009E73', '#D55E00', '#CC79A7'),  # Зеленый, оранжево-красный, розовый
+    ('#0072B2', "#F0B642", '#CC79A7'),  # Синий, желтый, розовый
+    ('#D55E00', '#009E73', '#56B4E9'),  # Оранжевый, зеленый, голубой
+    ('#56B4E9', '#E69F00', '#009E73'),  # Голубой, оранжевый, зеленый
+    ('#CC79A7', '#0072B2', "#45F042"),  # Розовый, синий, желтый
+    ("#9D0A96", '#D55E00', '#009E73'),  # Желтый, оранжевый, зеленый
+    ('#E69F00', '#56B4E9', '#CC79A7'),  # Оранжевый, голубой, розовый
+    ('#009E73', '#0072B2', '#D55E00'),  # Зеленый, синий, оранжевый
+    ('#CC79A7', "#4245F0", '#56B4E9')   # Розовый, желтый, голубой
+]
 
 def get_xy_from_file(file_name, x_name, y_name, separator=","):
     linear_data = pd.read_csv(file_name, sep=separator)
@@ -54,35 +66,48 @@ def get_round_sp(sp, accuracy):
 
 
 def paint_line_function(k, b, x_es, y_es=[], x_err=[], y_err=[], label='',
-                         marker_color='red',
-                         krest_color='black',
-                         size=3):
+                        line_color = '',
+                        point_color='',
+                        krest_color='',
+                        size=3,
+                        color_number=0):
     #Если добавить y_es, то 
+    if (not point_color) or (not krest_color) or (not line_color):
+        line_color, point_color, krest_color = color_combo_s[color_number % len(color_combo_s)]
     if len(x_err) == 0:
         x_err = [0 for i in x_es]
     if len(y_err) == 0:
         y_err = [0 for i in x_es]
     new_y_es = [k * x + b for x in x_es]
-    plt.plot(np.array(x_es), np.array(new_y_es), label=label)
+    plt.plot(np.array(x_es), np.array(new_y_es), label=label, color=line_color)
     if len(y_es) > 0:
         plt.errorbar(x_es, y_es, xerr=x_err, yerr=y_err, 
                     fmt='o',  # формат маркера (o - кружок)
-                    color=marker_color,
+                    color=point_color,
                     ecolor=krest_color,  # цвет крестов погрешностей
-                    markersize=size,)
+                    markersize=size)
 
 
 
-def set_end(xlabel='x', ylabel='y', title=''):
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
+def set_end(x_label='x', y_label='y', title='', show_origin=False):
+    if show_origin:
+        plt.xlim(left=0) # Граница x начинается с 0
+        plt.ylim(bottom=0) # Граница y начинается с 0
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
     plt.title(title)
     plt.grid()
     plt.legend()
     plt.show()
 
 
-
+def my_round(number, ndigits=0):
+    # лучше чем round(), который действует по банковскому принципу
+    exp = Decimal("1." + "0" * ndigits) if ndigits > 0 else Decimal("1")
+    if ndigits == 0:
+        return int(float(Decimal(str(number)).quantize(exp, rounding=ROUND_HALF_UP)))
+    else:
+        return float(Decimal(str(number)).quantize(exp, rounding=ROUND_HALF_UP))
 
 
 def create_table(i_es, u_es, q_es, sigma_q_es, epsilon_q_es, r_es, sigma_r_es, epsilon_r_es):
