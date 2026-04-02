@@ -9,10 +9,18 @@ from mnk import *
 
 
 
-def get_xy_from_file(file_name, x_name, y_name):
-    linear_data = pd.read_csv(file_name)
+def get_xy_from_file(file_name, x_name, y_name, separator=","):
+    linear_data = pd.read_csv(file_name, sep=separator)
     x_es, y_es = list(linear_data[x_name]), list(linear_data[y_name])
     return (x_es, y_es)
+
+def get_all_columns_from_file(file_name, separator=","):
+    sp = []
+    file = pd.read_csv(file_name, sep=separator)
+    columns = file.columns.tolist()
+    for column_name in columns:
+        sp.append(list(file[column_name]))
+    return sp
 
 
 def info_paint_graph_from_xy(x_es, y_es, color='r', label='', linestyle='-', marker='.', markersize=1):
