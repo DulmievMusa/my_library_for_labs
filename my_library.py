@@ -3,6 +3,7 @@ import numpy as np
 from math import sqrt
 from math import log
 import math
+from decimal import Decimal, ROUND_HALF_UP
 
 import matplotlib.pyplot as plt
 from mnk import *
