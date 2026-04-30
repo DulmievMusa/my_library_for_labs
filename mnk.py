@@ -1,5 +1,23 @@
 import math
 
+def origin_linear_regression(x_list, y_list):
+    n = len(x_list)
+    if n < 2:
+        raise ValueError("Нужно как минимум две точки.")
+
+    # Вычисляем коэффициент k
+    sum_xy = sum(xi * yi for xi, yi in zip(x_list, y_list))
+    sum_x2 = sum(xi**2 for xi in x_list)
+    
+    k = sum_xy / sum_x2
+    
+    # Вычисляем погрешность коэффициента k
+    sum_res_sq = sum((yi - k * xi)**2 for xi, yi in zip(x_list, y_list))
+    sigma_k = math.sqrt(sum_res_sq / ((n - 1) * sum_x2))
+    
+    return k, sigma_k
+
+
 def linear_regression(x, y):
     """
     Выполняет линейную регрессию методом наименьших квадратов.
