@@ -86,7 +86,8 @@ def paint_line_function(k, b, x_es, y_es=[], x_err=[], y_err=[], label='',
                     fmt='o',  # формат маркера (o - кружок)
                     color=point_color,
                     ecolor=krest_color,  # цвет крестов погрешностей
-                    markersize=size)
+                    markersize=size,
+                    label=label)
 
 
 
